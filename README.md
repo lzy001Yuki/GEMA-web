@@ -30,3 +30,9 @@ Scientific content was prepared from the supplied camera-ready Overleaf project 
 Con-Q charts preserve every supplied point from the main Astra configuration. `dist/assets/conq-data.json` contains digitized visual readbacks rather than rollout-log estimates. All/Astra/Pi05/DreamZero filtering preserves the with/without-memory pairs; no smoothing or extrapolation is used.
 
 Provider icons illustrate the modular model interface. They do not imply that all depicted providers were evaluated. Asset provenance is recorded in `dist/assets/brands/provenance.json`.
+
+## Cube Transform website case
+
+The Method animation uses a fresh artist-oak simulator episode (seed 42). Four Stage1 observations are sampled from the recorded expert replay, the goal is independently generated with the built-in image-generation tool, and a fresh Astra session grounds pickup/place pixels in live RGB-D. The existing measured-pose controller executes the plan. The 12.27-second clip is actual simulator execution, not generated video. The selected run passed the unchanged evaluator with 0.01153 m final target error. Public asset metadata is in `dist/assets/cube-case/case.json`; complete local runs and generation prompts are retained under ignored `case_runs/`.
+
+The website sequence reveals history frames every 360 ms, then advances through reference generation and control. The recorded clip is displayed at 2× only during the control phase while visible; it advances the sequence when it ends. No manual pause control is shown. The media asset retains its original timestamps.

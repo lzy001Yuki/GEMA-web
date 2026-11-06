@@ -9,26 +9,66 @@ const dialog=document.querySelector('#image-dialog'),expanded=document.querySele
 document.querySelectorAll('[data-zoom]').forEach(button=>button.addEventListener('click',()=>{opener=button;expanded.src=button.dataset.zoom;expanded.alt=button.querySelector('img')?.alt||'GEMA architecture from the paper';dialog.showModal();}));
 document.querySelector('#close-dialog').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});dialog.addEventListener('close',()=>opener?.focus());
 
-// The animation explains the reference interface; it does not simulate policy execution.
+// Run the method sequence automatically; the execution phase owns video playback.
 const pipeline=document.querySelector('.pipeline-animation');
 if(pipeline){
- const stepButtons=[...pipeline.querySelectorAll('[data-step]')],play=pipeline.querySelector('#pipeline-play');
- let phase=0,paused=matchMedia('(prefers-reduced-motion: reduce)').matches,visible=false,timer;
- function render(){
-  pipeline.dataset.phase=String(phase);
+ const steps=[...pipeline.querySelectorAll('[data-step]')],video=pipeline.querySelector('#cube-case-video');
+ const observations=[...pipeline.querySelectorAll('.cube-observation-stack img')];
+ const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ let phase=0,visible=false,videoVisible=false,shown=1,phaseTimer,historyTimer;
+ video.playbackRate=2;video.defaultPlaybackRate=2;
+ function clearTimers(){clearTimeout(phaseTimer);clearInterval(historyTimer)}
+ function showHistory(){observations.forEach((image,i)=>{image.style.zIndex=String(i+1);image.classList.toggle('is-stacked',i<shown)})}
+ function syncVideo(){
+  if(phase===4&&visible&&videoVisible&&!document.hidden&&!video.ended){video.playbackRate=2;video.play().catch(()=>{})}
+  else video.pause();
+ }
+ function schedule(){
+  clearTimers();syncVideo();
+  if(!visible||document.hidden)return;
+  if(phase===4){if(video.ended&&!reducedMotion)phaseTimer=setTimeout(()=>enterPhase(0),650);return}
+  if(reducedMotion)return;
+  if(phase===0&&shown<observations.length)historyTimer=setInterval(()=>{if(phase!==0){clearInterval(historyTimer);return}shown=Math.min(shown+1,observations.length);showHistory();if(shown>=observations.length)clearInterval(historyTimer)},360);
+  phaseTimer=setTimeout(()=>enterPhase(phase+1),phase===0?2100:1800);
+ }
+ function enterPhase(next){
+  clearTimers();
+  phase=next;pipeline.dataset.phase=String(phase);
+  pipeline.querySelector('.cube-observation-stack').dataset.state=phase===0?'stacking':'frozen';
   pipeline.querySelectorAll('[data-phase]').forEach(el=>el.classList.toggle('is-active',el.dataset.phase.split(' ').includes(String(phase))));
-  stepButtons.forEach((el,i)=>el.setAttribute('aria-pressed',String(i===phase)));
+  steps.forEach((button,i)=>button.setAttribute('aria-pressed',String(i===phase)));
   pipeline.querySelector('.transfer-one').classList.toggle('is-active',phase===0||phase===1);
   pipeline.querySelector('.transfer-two').classList.toggle('is-active',phase===1||phase===2);
-  pipeline.querySelector('.feedback-track').classList.toggle('is-active',phase===4);
-  pipeline.classList.toggle('is-paused',paused);
-  play.textContent=paused?'Play ▷':'Pause Ⅱ';play.setAttribute('aria-pressed',String(paused));
+  if(phase===0){shown=reducedMotion?observations.length:1;showHistory();video.pause();video.currentTime=0}
+  else if(phase!==4){video.pause();video.currentTime=0}
+  else{video.currentTime=0;video.playbackRate=2}
+  drawLoopArrows();
+  schedule();
  }
- function schedule(){clearInterval(timer);if(!paused&&visible&&!document.hidden)timer=setInterval(()=>{phase=(phase+1)%5;render()},2700)}
- play.addEventListener('click',()=>{paused=!paused;render();schedule()});
- stepButtons.forEach((button,i)=>button.addEventListener('click',()=>{phase=i;paused=true;render();schedule()}));
- new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;schedule()},{threshold:.15}).observe(pipeline);
- document.addEventListener('visibilitychange',schedule);render();
+ steps.forEach((button,i)=>button.addEventListener('click',()=>enterPhase(i)));
+ function drawLoopArrows(){
+  const base=pipeline.getBoundingClientRect(),local=el=>{const r=el.getBoundingClientRect();return{x:r.left-base.left,y:r.top-base.top,w:r.width,h:r.height}};
+  const reference=local(pipeline.querySelector('.reference-card')),control=local(pipeline.querySelector('.execution-card')),clip=local(pipeline.querySelector('.case-execution-video')),history=local(pipeline.querySelector('.history-card'));
+  const svg=pipeline.querySelector('.pipeline-loop-arrows');svg.setAttribute('viewBox',`0 0 ${base.width} ${base.height}`);
+  const desktop=innerWidth>700;
+  const fromX=reference.x+reference.w/2,toX=control.x+control.w/2,middleY=(reference.y+reference.h+control.y)/2;
+  pipeline.querySelector('.reference-to-control').setAttribute('d',`M${fromX},${reference.y+reference.h+3} V${middleY} H${toX} V${control.y-5}`);
+  if(desktop){const y=control.y+control.h/2,cy=clip.y+clip.h/2,mx=(control.x+clip.x+clip.w)/2;pipeline.querySelector('.control-to-video').setAttribute('d',`M${control.x-3},${y} H${mx} V${cy} H${clip.x+clip.w+5}`)}
+  else{pipeline.querySelector('.control-to-video').setAttribute('d',`M${toX},${control.y+control.h+3} V${clip.y-5}`)}
+  const startY=clip.y+clip.h/2,endY=history.y+history.h/2;
+  pipeline.querySelector('.video-to-memory').setAttribute('d',`M${clip.x-3},${startY} H13 V${endY} H${history.x-5}`);
+  const label=pipeline.querySelector('.memory-return-label');label.style.top=`${(startY+endY)/2}px`;
+  pipeline.querySelector('.reference-to-control').classList.toggle('is-active',phase===2||phase===3);
+  pipeline.querySelector('.control-to-video').classList.toggle('is-active',phase===3||phase===4);
+  pipeline.querySelector('.video-to-memory').classList.toggle('is-active',phase===0||phase===4&&video.ended);
+ }
+ new ResizeObserver(drawLoopArrows).observe(pipeline);
+ video.addEventListener('loadedmetadata',drawLoopArrows);
+ video.addEventListener('ended',()=>{drawLoopArrows();schedule()});
+ new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;schedule()},{threshold:.08}).observe(pipeline);
+ new IntersectionObserver(entries=>{videoVisible=entries[0].isIntersecting;syncVideo()},{threshold:.25}).observe(video);
+ document.addEventListener('visibilitychange',schedule);
+ enterPhase(0);
 }
 
 // Render original piecewise-linear Con-Q values with a policy selector.

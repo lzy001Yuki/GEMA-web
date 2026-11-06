@@ -3,3 +3,6 @@
 .sites-runtime/
 .netlify/
 .DS_Store
+
+# Local simulator case artifacts and logs
+/case_runs/

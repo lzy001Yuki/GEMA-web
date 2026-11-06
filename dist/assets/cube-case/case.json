@@ -1,0 +1,18 @@
+{
+  "case": "Cube Transform",
+  "seed": 42,
+  "visual_variant": "artist-oak",
+  "model": "gpt-6-astra",
+  "control_mode": "grounded-pick-place",
+  "direction": "right",
+  "offset_m": 0.1,
+  "success": true,
+  "final_target_error_m": 0.011526636723108078,
+  "stage2_steps": 183,
+  "agent_session_id": "01a1aebe-75e5-7323-a7b3-065baef05600",
+  "goal_image_sha256": "970eded80620b1bbc119ddff0777b36c820ba1bfb5b93aba7ec7491f280a88b7",
+  "history_source": "Recorded expert Stage1 replay; actual simulator observations",
+  "execution_source": "Fresh Astra image-goal plan; measured RGBD pick/place controller; actual simulator video",
+  "goal_producer": "built-in image_gen tool; target guide grounded in initial observed RGBD",
+  "scope": "Illustrative single case; not a new benchmark score"
+}
