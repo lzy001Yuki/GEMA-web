@@ -1,1 +1,12 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="18" fill="#087f79"/><text x="32" y="45" text-anchor="middle" font-family="Georgia" font-size="49" fill="white">g</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none">
+  <title>GEMA</title>
+  <defs>
+    <linearGradient id="bg" x1="8" y1="4" x2="74" y2="80" gradientUnits="userSpaceOnUse"><stop stop-color="#173e4b"/><stop offset="1" stop-color="#087f79"/></linearGradient>
+    <linearGradient id="rim" x1="10" y1="4" x2="62" y2="77" gradientUnits="userSpaceOnUse"><stop stop-color="#a8e2ce" stop-opacity=".55"/><stop offset="1" stop-color="#a8e2ce" stop-opacity=".08"/></linearGradient>
+  </defs>
+  <rect x="2" y="2" width="76" height="76" rx="23" fill="url(#bg)"/>
+  <rect x="2.75" y="2.75" width="74.5" height="74.5" rx="22.25" stroke="url(#rim)" stroke-width="1.5"/>
+  <path d="M57 25C52 20 47 18 40 18C26 18 17 28 17 42C17 55 25 64 39 64C47 64 53 61 58 56V43H42" stroke="#f1f8ef" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M24 69C36 66 49 66 58 68" stroke="#8ccfbb" stroke-width="1.7" stroke-linecap="round" opacity=".7"/>
+  <circle cx="59" cy="22" r="4.4" fill="#d5a56c"/>
+</svg>

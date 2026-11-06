@@ -1,2 +1,5 @@
-preview-*.png
+# Local screenshots and temporary hosting state
+/*.png
 .sites-runtime/
+.netlify/
+.DS_Store

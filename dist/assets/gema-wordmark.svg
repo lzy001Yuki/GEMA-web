@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="184" viewBox="0 0 640 184" fill="none">
+  <title>GEMA</title>
+  <defs>
+    <linearGradient id="ink" x1="26" y1="30" x2="604" y2="154" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#173e4b"/><stop offset=".46" stop-color="#087f79"/><stop offset="1" stop-color="#289b87"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(20 0) skewX(-9)" stroke="url(#ink)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M131 51C119 36 104 30 83 30C49 30 26 55 26 91C26 128 48 153 82 153C103 153 120 146 132 132V98H91"/>
+    <path d="M286 32H190V151H286M190 91H268"/>
+    <path d="M339 151V32L395 107L451 32V151"/>
+    <path d="M499 151L553 32L608 151M516 114H590"/>
+  </g>
+  <path d="M36 171C112 159 166 163 215 170" stroke="#90bfb2" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="153" cy="42" r="6" fill="#bd8b55"/>
+</svg>

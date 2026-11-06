@@ -1,11 +1,32 @@
-# GEMA project website
+# GEMA-web
 
-Buildless, responsive research project website. Serve `dist/` with any static web server; no dependency installation or build required.
+Project website for **GEMA: Generative Memory for Robotic Manipulation**.
 
-Local preview: `python3 -m http.server 8080 --directory dist`.
+Static HTML, CSS, JavaScript, SVG animations, and interactive evaluation charts. All files needed to serve the website are included in `dist/`; no dependencies or build step are required.
 
-Scientific content follows `../paper_camera_ready_overleaf/` and `../poster/`. Figures are rendered from the Overleaf PDFs; the simplified method pipeline, scene images, and Lato fonts come from the poster. Hero images are the existing observed/generated spatial-offset example from `../paper_camera_ready/scripts/assets/`. No synthetic experimental imagery was added.
+## Local preview
 
-The Task-Based table preserves the supplied central values and reported standard deviations. Con-Q curves show the main Astra configuration. Author placeholders are omitted. The website does not invent a code-release link or citation metadata.
+```bash
+python3 -m http.server 8073 --directory dist
+```
 
-Assets `GEMA-paper.pdf` and `GEMA-poster.pdf` are the supplied complete documents, including their existing author placeholders. Replace these documents when final author information is ready.
+Open http://localhost:8073.
+
+## Deploy on Netlify
+
+1. In Netlify, choose **Add new project → Import an existing project → GitHub**.
+2. Select **lzy001Yuki/GEMA-web** and branch **main**.
+3. Leave **Base directory** and **Build command** empty. Set **Publish directory** to **dist** (also configured in `netlify.toml`).
+4. Deploy. Subsequent pushes to `main` trigger a new deployment.
+
+## Contents and provenance
+
+- `dist/index.html`, `style.css`, `app.js`: responsive website and animated method schematic.
+- `dist/assets/`: paper, scientific figures, fonts, provider icons, and chart data.
+- `QUERY_TYPES.md`: query-type audit and generator provenance.
+
+Scientific content was prepared from the supplied camera-ready Overleaf project and poster. The website author list and affiliations follow the current poster. The supplied paper PDF still contains its original placeholder authors; replace `dist/assets/GEMA-paper.pdf` when the final document is ready.
+
+Con-Q charts preserve every supplied point from the main Astra configuration. `dist/assets/conq-data.json` contains digitized visual readbacks rather than rollout-log estimates. All/Astra/Pi05/DreamZero filtering preserves the with/without-memory pairs; no smoothing or extrapolation is used.
+
+Provider icons illustrate the modular model interface. They do not imply that all depicted providers were evaluated. Asset provenance is recorded in `dist/assets/brands/provenance.json`.
